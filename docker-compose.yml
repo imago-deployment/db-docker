@@ -1,0 +1,83 @@
+name: "${COMPOSE_NAME}"
+services:
+  mysql:
+    image: mysql:${MYSQL_TAG}
+    container_name: "${MYSQL_CONTAINER}"
+    restart: unless-stopped
+    environment:
+      TZ: "${TIME_ZONE}"
+      LANG: "${LANG}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PWD}"
+      MYSQL_DATABASE: "${MYSQL_BACKEND_DB}"
+      MYSQL_USER: "${MYSQL_BACKEND_USER}"
+      MYSQL_PASSWORD: "${MYSQL_BACKEND_PWD}"
+    volumes:
+      - "mysql-data:/var/lib/mysql"
+      - "${MYSQL_CONFIG}:/etc/mysql/conf.d"
+      - "${MYSQL_DOCKERINIT}:/docker-entrypoint-initdb.d"
+      - "${MYSQL_LOG_PATH}:/var/log/mysql"
+    ports:
+      - "${HOST_IP}:${MYSQL_PORT}:3306"
+    networks:
+      - backend
+  mongodb:
+    image: "mongo:${MONGODB_TAG}"
+    container_name: "${MONGODB_CONTAINER}"
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${MONGODB_USER}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGODB_PWD}"
+    volumes:
+      - "mongodb-data:/data/db/"
+      - "${MONGODB_CONFIG}:/data/configdb"
+      - "${MONGODB_DOCKERINIT}:/docker-entrypoint-initdb.d:ro"
+      - "${MONGODB_LOG_PATH}:/var/log/mongodb/mongod.log"
+    networks:
+      - backend
+    ports:
+      - "${HOST_IP}:${MONGODB_PORT}:27017"
+
+  redis:
+    image: "redis:${REDIS_TAG}"
+    container_name: "${REDIS_CONTAINER}"
+    restart: unless-stopped
+    command: "redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PWD}"
+    environment:
+      TZ: "${TIME_ZONE}"
+    volumes:
+      - "redis-data:/data"
+    networks:
+      - backend
+    ports:
+      - "${HOST_IP}:${REDIS_PORT}:6379"
+
+  postgres:
+    image: postgres:${POSTGRES_TAG}
+    container_name: "${POSTGRES_CONTAINER}"
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PWD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    volumes:
+      - "postgres-data:/var/lib/postgresql/data"
+      - "${POSTGRES_DOCKERINIT}:/docker-entrypoint-initdb.d"
+    networks:
+      - backend
+    ports:
+      - "${HOST_IP}:${POSTGRES_PORT}:5432"
+
+volumes:
+  mysql-data:
+    name: "${MYSQL_DATA_VOLUME}"
+  mongodb-data:
+    name: "${MONGODB_DATA_VOLUME}"
+  redis-data:
+    name: "${REDIS_DATA_VOLUME}"
+  postgres-data:
+    name: "${POSTGRES_DATA_VOLUME}"
+
+networks:
+  backend:
+    name: "${NET_BACKEND}"
+    driver: bridge
