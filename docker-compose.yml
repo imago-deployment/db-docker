@@ -19,7 +19,7 @@ services:
     ports:
       - "${HOST_IP}:${MYSQL_PORT}:3306"
     networks:
-      - backend
+      - net-db
   mongodb:
     image: "mongo:${MONGODB_TAG}"
     container_name: "${MONGODB_CONTAINER}"
@@ -33,7 +33,7 @@ services:
       - "${MONGODB_DOCKERINIT}:/docker-entrypoint-initdb.d:ro"
       - "${MONGODB_LOG_PATH}:/var/log/mongodb/mongod.log"
     networks:
-      - backend
+      - net-db
     ports:
       - "${HOST_IP}:${MONGODB_PORT}:27017"
 
@@ -47,7 +47,7 @@ services:
     volumes:
       - "redis-data:/data"
     networks:
-      - backend
+      - net-db
     ports:
       - "${HOST_IP}:${REDIS_PORT}:6379"
 
@@ -63,7 +63,7 @@ services:
       - "postgres-data:/var/lib/postgresql/data"
       - "${POSTGRES_DOCKERINIT}:/docker-entrypoint-initdb.d"
     networks:
-      - backend
+      - net-db
     ports:
       - "${HOST_IP}:${POSTGRES_PORT}:5432"
 
@@ -78,6 +78,6 @@ volumes:
     name: "${POSTGRES_DATA_VOLUME}"
 
 networks:
-  backend:
-    name: "${NET_BACKEND}"
+  net-db:
+    name: "${NET_DB}"
     driver: bridge
