@@ -41,11 +41,12 @@ services:
     image: "redis:${REDIS_TAG}"
     container_name: "${REDIS_CONTAINER}"
     restart: unless-stopped
-    command: "redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PWD}"
+    command: "redis-server /usr/local/etc/redis/redis.conf:ro --save 20 1 --loglevel warning --requirepass ${REDIS_PWD}"
     environment:
       TZ: "${TIME_ZONE}"
     volumes:
       - "redis-data:/data"
+      - "${REDIS_CONFIG}:/usr/local/etc/redis/redis.conf:ro"
     networks:
       - net-db
     ports:
@@ -60,7 +61,9 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PWD}"
       POSTGRES_DB: "${POSTGRES_DB}"
     volumes:
-      - "postgres-data:/var/lib/postgresql/data"
+      - "postgres-data:${DOCKER_POSTGRES_DATA}"
+      - "${POSTGRES_CONFIG}/postgresql.conf:${DOCKER_POSTGRES_DATA}/postgresql.conf"
+      - "${POSTGRES_CONFIG}/pg_hba.conf:${DOCKER_POSTGRES_DATA}/pg_hba.conf"
       - "${POSTGRES_DOCKERINIT}:/docker-entrypoint-initdb.d"
     networks:
       - net-db
