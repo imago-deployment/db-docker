@@ -101,9 +101,7 @@ net:
 use correct version's redis configuration
 redis.conf download link: https://redis.io/docs/latest/operate/oss_and_stack/management/config/
 ```
-cd ./config/redis/config/
-cp v8.8-redis.conf redis.conf
-rm v7.7-redis.conf v8.8-redis.conf
+cd ./config/redis/8.10/
 ```
 change the configuration
 ```

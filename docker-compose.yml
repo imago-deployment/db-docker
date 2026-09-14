@@ -7,21 +7,21 @@ services:
     environment:
       TZ: "${TIME_ZONE}"
       LANG: "${LANG}"
-      MYSQL_ROOT_PASSWORD: "${MYSQL_PWD}"
-      MYSQL_DATABASE: "${MYSQL_BACKEND_DB}"
-      MYSQL_USER: "${MYSQL_BACKEND_USER}"
-      MYSQL_PASSWORD: "${MYSQL_BACKEND_PWD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PWD}"
+      MYSQL_DATABASE: "${MYSQL_DB}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PWD}"
     volumes:
       - "mysql-data:/var/lib/mysql"
       - "${MYSQL_CONFIG}:/etc/mysql/conf.d"
-      - "${MYSQL_DOCKERINIT}:/docker-entrypoint-initdb.d"
+      - "${MYSQL_INIT}:/docker-entrypoint-initdb.d"
       - "${MYSQL_LOG_PATH}:/var/log/mysql"
     ports:
       - "${HOST_IP}:${MYSQL_PORT}:3306"
     networks:
       - net-db
   mongodb:
-    image: "mongo:${MONGODB_TAG}"
+    image: "mongodb/mongodb-community-server:${MONGODB_TAG}"
     container_name: "${MONGODB_CONTAINER}"
     restart: unless-stopped
     environment:

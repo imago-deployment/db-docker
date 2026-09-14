@@ -1,4 +1,4 @@
-db = db.getSiblingDB("got_db");
+db = db.getSiblingDB("db_imago");
 
 db.createUser({
     user: "admin",
@@ -6,14 +6,14 @@ db.createUser({
     roles: [
         {
             role: 'readWrite',
-            db: 'got_db'
+            db: 'db_imago'
         },
     ],
 });
 
-db.createCollection("got_seasons_collection");
+db.createCollection("col_seasons");
 
-db.got_seasons_collection.insertMany([
+db.col_seasons.insertMany([
     {
         season: "1",
         year: "2011",
