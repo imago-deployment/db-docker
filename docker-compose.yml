@@ -41,12 +41,12 @@ services:
     image: "redis:${REDIS_TAG}"
     container_name: "${REDIS_CONTAINER}"
     restart: unless-stopped
-    command: "redis-server /usr/local/etc/redis/redis.conf:ro --save 20 1 --loglevel warning --requirepass ${REDIS_PWD}"
     environment:
       TZ: "${TIME_ZONE}"
     volumes:
       - "redis-data:/data"
-      - "${REDIS_CONFIG}:/usr/local/etc/redis/redis.conf:ro"
+      - "${REDIS_CONFIG}:/usr/local/etc/redis/redis.conf"
+    command: "redis-server /usr/local/etc/redis/redis.conf --save 20 1 --loglevel warning --requirepass ${REDIS_PWD}"
     networks:
       - net-db
     ports:
