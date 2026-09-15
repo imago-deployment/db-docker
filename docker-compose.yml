@@ -62,8 +62,8 @@ services:
       POSTGRES_DB: "${POSTGRES_DB}"
     volumes:
       - "postgres-data:${DOCKER_POSTGRES_DATA}"
-      - "${POSTGRES_CONFIG}/postgresql.conf:${DOCKER_POSTGRES_DATA}/postgresql.conf"
-      - "${POSTGRES_CONFIG}/pg_hba.conf:${DOCKER_POSTGRES_DATA}/pg_hba.conf"
+#      - "${POSTGRES_CONFIG}/postgresql.conf:${DOCKER_POSTGRES_DATA}/${POSTGRES_TAG}/docker/postgresql.conf"
+#      - "${POSTGRES_CONFIG}/pg_hba.conf:${DOCKER_POSTGRES_DATA}/${POSTGRES_TAG}/docker/pg_hba.conf"
       - "${POSTGRES_DOCKERINIT}:/docker-entrypoint-initdb.d"
     networks:
       - net-db
